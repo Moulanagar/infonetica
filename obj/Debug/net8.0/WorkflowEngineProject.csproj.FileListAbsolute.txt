@@ -31,3 +31,4 @@
 /Users/sabahat/WorkflowEngine/WorkflowEngineProject/obj/Debug/net8.0/WorkflowEngineProject.pdb
 /Users/sabahat/WorkflowEngine/WorkflowEngineProject/obj/Debug/net8.0/WorkflowEngineProject.genruntimeconfig.cache
 /Users/sabahat/WorkflowEngine/WorkflowEngineProject/obj/Debug/net8.0/ref/WorkflowEngineProject.dll
+/Users/sabahat/WorkflowEngine/WorkflowEngineProject/obj/Debug/net8.0/WorkflowEngineProject.sourcelink.json
