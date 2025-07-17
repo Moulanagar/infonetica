@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Workflow Engine API Tester</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 20px;
+    }
+    textarea, input, button {
+      width: 100%;
+      margin-top: 8px;
+      margin-bottom: 20px;
+      padding: 8px;
+    }
+    .section {
+      border: 1px solid #ccc;
+      padding: 16px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+    }
+    .response {
+      background: #f9f9f9;
+      padding: 10px;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <h1>Workflow API Tester</h1>
+
+  <div class="section">
+    <h2>1. Create Workflow Definition</h2>
+    <textarea id="workflowDefinition" rows="10">{
+  "id": "test-wf",
+  "states": [
+    { "id": "start", "name": "Start", "isInitial": true, "isFinal": false, "enabled": true },
+    { "id": "end", "name": "End", "isInitial": false, "isFinal": true, "enabled": true }
+  ],
+  "actions": [
+    { "id": "go", "name": "Go to End", "enabled": true, "fromStates": ["start"], "toState": "end" }
+  ]
+}</textarea>
+    <button onclick="createWorkflow()">Create Workflow</button>
+    <div class="response" id="response1"></div>
+  </div>
+
+  <div class="section">
+    <h2>2. Start Workflow Instance</h2>
+    <input id="workflowId" placeholder="Workflow ID (e.g. test-wf)" />
+    <button onclick="startWorkflow()">Start Instance</button>
+    <div class="response" id="response2"></div>
+  </div>
+
+  <div class="section">
+    <h2>3. Execute Action</h2>
+    <input id="instanceId" placeholder="Instance ID" />
+    <input id="actionId" placeholder="Action ID (e.g. go)" />
+    <button onclick="executeAction()">Execute</button>
+    <div class="response" id="response3"></div>
+  </div>
+
+  <div class="section">
+    <h2>4. Get Instance Status</h2>
+    <input id="queryInstanceId" placeholder="Instance ID" />
+    <button onclick="getInstance()">Fetch Instance</button>
+    <div class="response" id="response4"></div>
+  </div>
+
+  <script>
+    const baseUrl = 'https://infonetica.onrender.com/'
+    async function createWorkflow() {
+      const res = await fetch(`${baseUrl}/workflow`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: document.getElementById('workflowDefinition').value
+      });
+      document.getElementById('response1').textContent = await res.text();
+    }
+
+    async function startWorkflow() {
+      const id = document.getElementById('workflowId').value;
+      const res = await fetch(`${baseUrl}/workflow/${id}/start`, { method: 'POST' });
+      const json = await res.json();
+      document.getElementById('response2').textContent = JSON.stringify(json, null, 2);
+      document.getElementById('instanceId').value = json.id;
+      document.getElementById('queryInstanceId').value = json.id;
+    }
+
+    async function executeAction() {
+      const id = document.getElementById('instanceId').value;
+      const action = document.getElementById('actionId').value;
+      const res = await fetch(`${baseUrl}/instance/${id}/execute?actionId=${action}`, { method: 'POST' });
+      document.getElementById('response3').textContent = await res.text();
+    }
+
+    async function getInstance() {
+      const id = document.getElementById('queryInstanceId').value;
+      const res = await fetch(`${baseUrl}/instance/${id}`);
+      const json = await res.json();
+      document.getElementById('response4').textContent = JSON.stringify(json, null, 2);
+    }
+  </script>
+</body>
+</html>
