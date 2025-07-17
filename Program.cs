@@ -1,9 +1,11 @@
 using WorkflowEngine.Models;
 using WorkflowEngine.Services;
+using Microsoft.AspNetCore.Builder;
 
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
-
+app.UseDefaultFiles();  
+app.UseStaticFiles();
 app.MapPost("/workflow", (WorkflowDefinition def) =>
 {
     if (InMemoryStore.Definitions.ContainsKey(def.Id))
@@ -80,3 +82,5 @@ app.MapGet("/instance/{id}", (string id) =>
 });
 
 app.Run();
+
+//heloo 
